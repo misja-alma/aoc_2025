@@ -1,28 +1,27 @@
-use std::io::{self, Error, ErrorKind};
 use regex::Regex;
+use anyhow::{Result, anyhow};
 use crate::utils::*;
 
-fn parse_move(s: &String) -> io::Result<i32> {
+fn parse_move(s: &String) -> Result<i32> {
     let re = Regex::new(r"^([LR])([1-9]\d*)$").unwrap();
 
-    if let Some(caps) = re.captures(s.as_str()) {
+    if let Some(caps) = re.captures(s) {
         let direction = match caps.get(1).unwrap().as_str() {
             "L" => -1,
             "R" => 1,
-            _ => return Err(Error::new(ErrorKind::InvalidData, "Invalid direction")),
+            _ => return Err(anyhow!("Invalid direction")),
         };
 
         let number: i32 = caps.get(2).unwrap().as_str()
-            .parse()
-            .map_err(|_| Error::new(ErrorKind::InvalidData, "Invalid number"))?;
+            .parse()?;
 
         Ok(number * direction)
     } else {
-        Err(Error::new(ErrorKind::InvalidData, "Invalid input: {s}"))
+        Err(anyhow!("Invalid input: {s}"))
     }
 }
 
-pub fn part1() -> std::io::Result<()> {
+pub fn part1() -> Result<()> {
     let mut dial = 50;
     let mut zeroes = 0;
 
@@ -37,7 +36,7 @@ pub fn part1() -> std::io::Result<()> {
     Ok(())
 }
 
-pub fn part2() -> std::io::Result<()> {
+pub fn part2() -> Result<()> {
     let mut dial = 50;
     let mut zeroes = 0;
 
