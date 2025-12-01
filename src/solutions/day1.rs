@@ -1,4 +1,4 @@
-use std::io;
+use std::io::{self, Error};
 use regex::Regex;
 use crate::utils::*;
 
@@ -9,17 +9,17 @@ fn parse_move(s: &String) -> io::Result<i32> {
         let direction = match caps.get(1).unwrap().as_str() {
             "L" => -1,
             "R" => 1,
-            _ => return Err(io::Error::new(io::ErrorKind::InvalidData, "Invalid direction")),
+            _ => return Err(Error::new(io::ErrorKind::InvalidData, "Invalid direction")),
         };
 
         let number: i32 = caps.get(2).unwrap().as_str()
             .parse()
-            .map_err(|_| io::Error::new(io::ErrorKind::InvalidData, "Invalid number"))?;
+            .map_err(|_| Error::new(io::ErrorKind::InvalidData, "Invalid number"))?;
 
 
         Ok(number * direction)
     } else {
-        Err(io::Error::new(io::ErrorKind::InvalidData, "Invalid input: {s}"))
+        Err(Error::new(io::ErrorKind::InvalidData, "Invalid input: {s}"))
     }
 }
 
