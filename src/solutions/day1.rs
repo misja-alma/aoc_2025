@@ -1,6 +1,6 @@
-use std::fs::File;
-use std::io::{self, BufRead};
+use std::io;
 use regex::Regex;
+use crate::utils::*;
 
 fn parse_move(s: &String) -> io::Result<i32> {
     let re = Regex::new(r"^([LR])([1-9]\d*)$").unwrap();
@@ -24,42 +24,32 @@ fn parse_move(s: &String) -> io::Result<i32> {
 }
 
 pub fn part1() -> std::io::Result<()> {
-    let path = "/Users/misja/rust_projects/aoc_2025/resources/day1.txt";
-
-    let file = File::open(path)?;
-    let reader = io::BufReader::new(file);
-
     let mut dial = 50;
     let mut zeroes = 0;
 
-    for line_result in reader.lines() {
+    for line_result in file_to_lines("day1.txt")? {
         let line = line_result?;
         let dif = parse_move(&line)?;
         dial = (dial + dif) % 100;
         if dial == 0 { zeroes += 1 };
     }
 
-    println!("Solution: {}", zeroes);
+    println!("Solution part 1: {}", zeroes);
     Ok(())
 }
 
 pub fn part2() -> std::io::Result<()> {
-    let path = "/Users/misja/rust_projects/aoc_2025/resources/day1.txt";
-
-    let file = File::open(path)?;
-    let reader = io::BufReader::new(file);
-
     let mut dial = 50;
     let mut zeroes = 0;
 
-    for line_result in reader.lines() {
+    for line_result in file_to_lines("day1.txt")? {
         let line = line_result?;
         let dif = parse_move(&line)?;
-        let turns = ((dial + dif) / 100);
+        let turns = (dial + dif) / 100;
         if (dial + dif) <= 0 { zeroes += -turns + (if dial > 0 {1} else {0}) } else { zeroes += turns };
         dial = ((dial + dif) % 100 + 100) % 100;
     }
 
-    println!("Solution: {}", zeroes);
+    println!("Solution part 2: {}", zeroes);
     Ok(())
 }

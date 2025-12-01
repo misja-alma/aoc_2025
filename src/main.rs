@@ -1,7 +1,10 @@
 mod solutions;
+mod utils;
 
-fn main() {
-    let solution = solutions::day1::part2();
+use solutions::day1::*;
 
-    println!("Solution: {:?}", solution);
+fn main() -> std::io::Result<()> {
+    part1()?;
+
+    part2()
 }
