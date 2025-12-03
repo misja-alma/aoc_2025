@@ -12,3 +12,5 @@ opt-level = 3       # 0 = no optimization, 3 = max
 debug = false       # include debug info?
 lto = true          # link-time optimization
 codegen-units = 1   # better optimization at the cost of compile speed
+target-cpu = "native"
+panic = "abort"
