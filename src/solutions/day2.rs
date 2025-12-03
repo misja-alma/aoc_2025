@@ -1,8 +1,8 @@
 use anyhow::Result;
-use std::collections::HashSet;
+use std::fmt::Display;
 use crate::utils::*;
 
-fn int_to_digits(x: i64) -> Vec<u32> {
+fn int_to_digits(x: u64) -> Vec<u32> {
     let mut digits = Vec::new();
     let mut n = x;
 
@@ -19,19 +19,11 @@ fn int_to_digits(x: i64) -> Vec<u32> {
     digits
 }
 
-fn digits_to_int(digits: &[u32]) -> i64 {
-    let mut result = 0;
-    for d in digits {
-        result = result * 10 + *d as i64;
-    }
-    result
+fn first_palindrome_of_even_length(length: usize) -> u64 {
+    10_u64.pow((length-1) as u32) + 10_u64.pow(length as u32 / 2 - 1)
 }
 
-fn first_palindrome_of_even_length(length: usize) -> i64 {
-    10_i64.pow((length-1) as u32) + 10_i64.pow(length as u32 / 2 - 1)
-}
-
-fn find_palindrome_ge(target: i64) -> i64 {
+fn find_palindrome_ge(target: u64) -> u64 {
     // if nr digits odd; take first next even (i.e. 111..)
     // if digit even; take half or nr
     let digits = int_to_digits(target);
@@ -50,7 +42,7 @@ fn find_palindrome_ge(target: i64) -> i64 {
     }
 }
 
-fn next_palindrome(from: i64) -> i64 {
+fn next_palindrome(from: u64) -> u64 {
     let digits = int_to_digits(from);
     if digits.len() % 2 != 0 {
         first_palindrome_of_even_length(digits.len() / 2 + 1)
@@ -67,17 +59,17 @@ fn next_palindrome(from: i64) -> i64 {
     }
 }
 
-fn invalid_sum(lower: i64, upper: i64) -> i64 {
+fn invalid_sum(lower: u64, upper: u64) -> u64 {
     let mut invalid = find_palindrome_ge(lower);
     let mut total = 0;
     while invalid <= upper {
-        total += invalid as i64;
+        total += invalid;
         invalid = next_palindrome(invalid);
     }
     total
 }
 
-pub fn part1() -> Result<()> {
+pub fn part1() ->  Result<impl Display> {
     let line = file_as_string("day2.txt")?;
     let mut total = 0;
 
@@ -88,11 +80,10 @@ pub fn part1() -> Result<()> {
         total += invalid_sum(lower, higher);
     }
 
-    println!("Solution for part 1: {}", total);
-    Ok(())
+    Ok(total)
 }
 
-fn is_repeating(n: i64) -> bool {
+fn is_repeating(n: u64) -> bool {
     let digits = int_to_digits(n);
     if digits.len() < 2 {
         return false;
@@ -108,11 +99,11 @@ fn is_repeating(n: i64) -> bool {
         .is_some()
 }
 
-fn all_invalid_sum(lower: i64, upper: i64) -> i64 {
+fn all_invalid_sum(lower: u64, upper: u64) -> u64 {
     (lower..=upper).filter(|&n| is_repeating(n)).sum()
 }
 
-pub fn part2() -> Result<()> {
+pub fn part2() -> Result<impl Display> {
     let line = file_as_string("day2.txt")?;
     let mut total = 0;
 
@@ -124,6 +115,5 @@ pub fn part2() -> Result<()> {
         total += all_invalid_sum(lower, higher);
     }
 
-    println!("Solution for part 2: {}", total);
-    Ok(())
+    Ok(total)
 }

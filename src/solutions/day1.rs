@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use regex::Regex;
 use anyhow::{Result, anyhow};
 use crate::utils::*;
@@ -21,33 +22,31 @@ fn parse_move(s: &String) -> Result<i32> {
     }
 }
 
-pub fn part1() -> Result<()> {
+pub fn part1() -> Result<impl Display> {
     let mut dial = 50;
     let mut zeroes = 0;
 
-    for line_result in file_to_lines("day1.txt")? {
-        let line = line_result?;
+    for line in file_to_lines("day1.txt")? {
+        let line = line?;
         let dif = parse_move(&line)?;
         dial = (dial + dif) % 100;
         if dial == 0 { zeroes += 1 };
     }
-
-    println!("Solution part 1: {}", zeroes);
-    Ok(())
+    
+    Ok(zeroes)
 }
 
-pub fn part2() -> Result<()> {
+pub fn part2() -> Result<impl Display>  {
     let mut dial = 50;
     let mut zeroes = 0;
 
-    for line_result in file_to_lines("day1.txt")? {
-        let line = line_result?;
+    for line in file_to_lines("day1.txt")? {
+        let line = line?;
         let dif = parse_move(&line)?;
         let turns = (dial + dif) / 100;
         if (dial + dif) <= 0 { zeroes += -turns + (if dial > 0 {1} else {0}) } else { zeroes += turns };
         dial = ((dial + dif) % 100 + 100) % 100;
     }
-
-    println!("Solution part 2: {}", zeroes);
-    Ok(())
+    
+    Ok(zeroes)
 }

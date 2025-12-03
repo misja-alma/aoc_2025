@@ -6,3 +6,9 @@ edition = "2024"
 [dependencies]
 regex = "1.12.2"
 anyhow = "1.0.100"
+
+[profile.release]
+opt-level = 3       # 0 = no optimization, 3 = max
+debug = false       # include debug info?
+lto = true          # link-time optimization
+codegen-units = 1   # better optimization at the cost of compile speed
